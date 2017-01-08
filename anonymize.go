@@ -14,45 +14,130 @@ var (
 	salt = os.Getenv("SALT") // Get the salt to be used from ENV var called SALT.
 )
 
-// Email normalizes String s to lowercase and removes all spaces and tabs.
-// If e is true it also hashes s with sha512 and with a random salt from OS env-var $SALT.
-// It returns an encrypted and/or normalized string.
-func Email(s string, e bool) string {
-	if s == "" {
-		return "" // Just return an empty string if the input was empty.
-	}
-	s = normalizeEmail(s)
-	if e {
-		s = hash(s)
-	}
+// EmailAnonymize anonymizes String s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an encrypted string.
+func EmailAnonymize(s string) string {
+	s = email(s, false, true)
 
 	return s
 }
 
-// String normalizes String s to lowercase and removes all leading and trailing spaces and tabs.
-// If e is true it also hashes s with sha512 and with a random salt from OS env-var $SALT.
-// It returns an encrypted and/or normalized string.
-func String(s string, e bool) string {
-	if s == "" {
-		return "" // Just return an empty string if the input was empty.
-	}
-	s = normalizeString(s)
-	if e {
-		s = hash(s)
-	}
+// EmailNormalize normalizes String s to lowercase and removes all spaces and tabs.
+// It returns an normalized string.
+func EmailNormalize(s string) string {
+	s = email(s, true, false)
 
 	return s
 }
 
-// Phone normalizes String s by removing all spaces and tabs and replacing the first
+// EmailNormAnonymize normalizes String s to lowercase and removes all spaces and tabs and
+// also hashes s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an normalized then encrypted string.
+func EmailNormAnonymize(s string) string {
+	s = email(s, true, true)
+
+	return s
+}
+
+// StringAnonymize anonymizes String s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an encrypted string.
+func StringAnonymize(s string) string {
+	s = str(s, false, true)
+
+	return s
+}
+
+// StringNormalize normalizes String s to lowercase and removes all leading and trailing spaces and tabs.
+// It returns an normalized string.
+func StringNormalize(s string) string {
+	s = str(s, true, false)
+
+	return s
+}
+
+// StringNormAnonymize normalizes String s to lowercase and removes all leading and trailing spaces and tabs and
+// hashes s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an normalized then encrypted string.
+func StringNormAnonymize(s string) string {
+	s = str(s, true, true)
+
+	return s
+}
+
+// PhoneAnonymize anonymizes String s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an encrypted string.
+func PhoneAnonymize(s string) string {
+	s = phone(s, false, true)
+
+	return s
+}
+
+// PhoneNormalize normalizes String s by removing all spaces and tabs and replacing the first
 // "+" with "00" and removing all other characters other than 0-9.
-// If e is true it also hashes s with sha512 and with a random salt from OS env-var $SALT.
-// It returns an encrypted and/or normalized string.
-func Phone(s string, e bool) string {
+// It returns an normalized string.
+func PhoneNormalize(s string) string {
+	s = phone(s, true, false)
+
+	return s
+}
+
+// PhoneNormAnonymize normalizes String s by removing all spaces and tabs and replacing the first
+// "+" with "00" and removing all other characters other than 0-9 and
+// hashes s with sha512 and with a random salt from OS env-var $SALT.
+// It returns an normalized then encrypted string.
+func PhoneNormAnonymize(s string) string {
+	s = phone(s, true, true)
+
+	return s
+}
+
+func email(s string, n bool, e bool) string {
 	if s == "" {
 		return "" // Just return an empty string if the input was empty.
 	}
-	s = normalizePhone(s)
+
+	// If we should normalize the data
+	if n {
+		s = normalizeEmail(s)
+	}
+
+	// If we should encrypt the data
+	if e {
+		s = hash(s)
+	}
+
+	return s
+}
+
+func str(s string, n bool, e bool) string {
+	if s == "" {
+		return "" // Just return an empty string if the input was empty.
+	}
+
+	// If we should normalize the data
+	if n {
+		s = normalizeString(s)
+	}
+
+	// If we should encrypt the data
+	if e {
+		s = hash(s)
+	}
+
+	return s
+}
+
+func phone(s string, n bool, e bool) string {
+	if s == "" {
+		return "" // Just return an empty string if the input was empty.
+	}
+
+	// If we should normalize the data
+	if n {
+		s = normalizePhone(s)
+	}
+
+	// If we should encrypt the data
 	if e {
 		s = hash(s)
 	}
