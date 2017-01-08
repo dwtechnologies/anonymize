@@ -10,10 +10,6 @@ import (
 	"unicode/utf8"
 )
 
-var (
-	salt = os.Getenv("SALT") // Get the salt to be used from ENV var called SALT.
-)
-
 // EmailAnonymize anonymizes String s with sha512 and with a random salt from OS env-var $SALT.
 // It returns an encrypted string.
 func EmailAnonymize(s string) string {
@@ -147,6 +143,7 @@ func phone(s string, n bool, e bool) string {
 
 // hashes the strig using SHA-512 and a "randomized"" length salt.
 func hash(s string) string {
+	salt := os.Getenv("SALT") // Get the salt to be used from ENV var called SALT.
 	if len(salt) < 128 {
 		fmt.Println("SALT is less than 128 chars. Hashing not possible.")
 		return s
