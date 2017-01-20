@@ -141,8 +141,12 @@ func phone(s string, n bool, e bool) string {
 	return s
 }
 
-// hashes the strig using SHA-512 and a "randomized"" length salt.
+// hashes the strig using SHA-512 and a "randomized" length salt.
 func hash(s string) string {
+	if s == "" {
+		return "" // Return empty string if s is empty
+	}
+
 	salt := os.Getenv("SALT") // Get the salt to be used from ENV var called SALT.
 	if len(salt) < 128 {
 		fmt.Println("SALT is less than 128 chars. Hashing not possible.")
